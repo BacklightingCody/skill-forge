@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { inMemoryPlans } from "../route";
+import { inMemoryPlans } from "@/lib/store";
 
 // 获取单个计划
 export async function GET(

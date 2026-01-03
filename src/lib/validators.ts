@@ -31,7 +31,9 @@ const resourceSchema = z.object({
 // 任务验证
 const taskSchema = z.object({
   id: z.string(),
+  title: z.string().optional().default(""),  // 简短标题，兼容旧数据
   desc: z.string(),
+  objectives: z.array(z.string()).optional().default([]),  // 学习目标，兼容旧数据
   timeMinutes: z.number().int().min(5).max(120),
   resources: z.array(resourceSchema),
   assessment: z.array(z.string()).min(1).max(10),

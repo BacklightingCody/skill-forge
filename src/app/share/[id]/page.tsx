@@ -28,8 +28,8 @@ const mockSharedPlan = {
       title: "JavaScript 基础",
       description: "复习 JavaScript 核心知识",
       tasks: [
-        { id: "t1", desc: "ES6+ 语法复习", timeMinutes: 45, resources: [], assessment: [] },
-        { id: "t2", desc: "异步编程", timeMinutes: 60, resources: [], assessment: [] },
+        { id: "t1", title: "ES6+语法", desc: "ES6+ 语法复习", objectives: ["理解ES6核心特性"], timeMinutes: 45, resources: [], assessment: [] },
+        { id: "t2", title: "异步编程", desc: "异步编程", objectives: ["理解Promise和async/await"], timeMinutes: 60, resources: [], assessment: [] },
       ],
     },
     {
@@ -38,8 +38,8 @@ const mockSharedPlan = {
       title: "React 基础",
       description: "学习 React 核心概念",
       tasks: [
-        { id: "t3", desc: "JSX 与组件", timeMinutes: 50, resources: [], assessment: [] },
-        { id: "t4", desc: "React Hooks", timeMinutes: 60, resources: [], assessment: [] },
+        { id: "t3", title: "JSX与组件", desc: "JSX 与组件", objectives: ["理解JSX语法", "掌握组件创建"], timeMinutes: 50, resources: [], assessment: [] },
+        { id: "t4", title: "React Hooks", desc: "React Hooks", objectives: ["掌握useState", "掌握useEffect"], timeMinutes: 60, resources: [], assessment: [] },
       ],
     },
   ] as Milestone[],

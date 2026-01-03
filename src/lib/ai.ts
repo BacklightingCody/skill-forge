@@ -178,7 +178,12 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
         tasks: [
           {
             id: "t1",
+            title: "基础概念",
             desc: "了解基本概念",
+            objectives: [
+              "理解核心概念和术语",
+              "了解基本用法和场景",
+            ],
             timeMinutes: Math.min(60, intent.dailyMinutes),
             resources: [
               {
@@ -188,8 +193,8 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
               },
             ],
             assessment: [
-              "能解释核心概念",
-              "了解基本用法",
+              "能向他人解释核心概念",
+              "能演示基本用法",
               "完成入门练习",
             ],
           },
@@ -203,7 +208,12 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
         tasks: [
           {
             id: "t2",
+            title: "实践应用",
             desc: "实践应用",
+            objectives: [
+              "理解高级用法",
+              "掌握最佳实践",
+            ],
             timeMinutes: Math.min(60, intent.dailyMinutes),
             resources: [
               {
@@ -214,8 +224,8 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
             ],
             assessment: [
               "完成实践项目",
-              "理解高级用法",
-              "能独立解决问题",
+              "能正确使用高级特性",
+              "能独立解决常见问题",
             ],
           },
         ],
@@ -228,7 +238,12 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
         tasks: [
           {
             id: "t3",
+            title: "综合项目",
             desc: "完成综合项目",
+            objectives: [
+              "综合运用所学知识",
+              "积累项目经验",
+            ],
             timeMinutes: Math.min(90, intent.dailyMinutes),
             resources: [
               {
@@ -238,8 +253,8 @@ function createFallbackPlan(intent: LearningIntent): GeneratedPlan {
             ],
             assessment: [
               "完成项目核心功能",
-              "代码质量良好",
-              "能解释实现思路",
+              "代码质量良好，结构清晰",
+              "能向他人解释实现思路",
             ],
           },
         ],

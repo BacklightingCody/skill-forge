@@ -78,6 +78,23 @@ export default function PlanDetailPage({
     [nodeProgress]
   );
 
+  // 构建节点完整标题映射（用于悬浮提示）
+  const nodeTitlesMap = useMemo(() => {
+    if (!plan) return new Map<string, string>();
+    const map = new Map<string, string>();
+    for (const milestone of plan.milestones) {
+      for (const task of milestone.tasks) {
+        const node = plan.graphData.nodes.find(n => n.taskId === task.id);
+        if (node) {
+          // 优先使用 task.title，兼容旧数据使用 desc
+          const title = task.title || task.desc.split("\n")[0].replace(/^【.*?】/, "").trim();
+          map.set(node.id, title);
+        }
+      }
+    }
+    return map;
+  }, [plan]);
+
   const selectedNode = useMemo(() => {
     if (!selectedNodeId || !plan) return null;
     const graphNode = plan.graphData.nodes.find((n) => n.id === selectedNodeId);
@@ -240,6 +257,7 @@ export default function PlanDetailPage({
             nodes={plan.graphData.nodes}
             edges={plan.graphData.edges}
             nodeProgress={nodeProgressMap}
+            nodeTitles={nodeTitlesMap}
             onNodeClick={(nodeId) => setSelectedNodeId(nodeId)}
           />
         </TabsContent>

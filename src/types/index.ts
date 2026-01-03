@@ -25,10 +25,12 @@ export interface Resource {
 
 export interface Task {
   id: string;
-  desc: string;
+  title: string;           // 简短标题，用于节点展示（如："学习变量与数据类型"）
+  desc: string;            // 详细描述
+  objectives: string[];    // 学习目标：学完这个任务后应该能理解/掌握什么
   timeMinutes: number;
   resources: Resource[];
-  assessment: string[];
+  assessment: string[];    // 验收标准：具体的、可验证的检验项
 }
 
 export interface Milestone {

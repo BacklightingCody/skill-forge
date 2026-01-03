@@ -21,7 +21,8 @@ import type { GraphNode, NodeStatus } from "@/types";
 import { CheckCircle2, Circle, Clock, SkipForward } from "lucide-react";
 
 interface CustomNodeData extends Record<string, unknown> {
-  label: string;
+  label: string;          // 简短标题
+  title?: string;         // 完整标题（悬浮显示）
   type: "milestone" | "task";
   status: NodeStatus;
   day: number;
@@ -55,11 +56,18 @@ function getStatusColor(status: NodeStatus): string {
 }
 
 function CustomNode({ data }: { data: CustomNodeData }) {
+  // 节点标题截取，最多显示 12 个字符
+  const displayLabel = data.label.length > 12 
+    ? data.label.substring(0, 12) + "..." 
+    : data.label;
+
   return (
     <div
       onClick={data.onClick}
+      title={data.title || data.label} // 悬浮显示完整标题
       className={cn(
-        "px-4 py-3 rounded-lg border-2 shadow-sm cursor-pointer transition-all hover:shadow-md min-w-[150px]",
+        "px-3 py-2 rounded-lg border-2 shadow-sm cursor-pointer transition-all hover:shadow-md hover:scale-105",
+        "min-w-[120px] max-w-[160px]",
         getStatusColor(data.status),
         data.type === "milestone" && "border-primary bg-primary/5"
       )}
@@ -67,7 +75,7 @@ function CustomNode({ data }: { data: CustomNodeData }) {
       <Handle type="target" position={Position.Left} className="!bg-primary" />
       <div className="flex items-center gap-2">
         {getStatusIcon(data.status)}
-        <span className="font-medium text-sm">{data.label}</span>
+        <span className="font-medium text-sm truncate">{displayLabel}</span>
       </div>
       <div className="text-xs text-muted-foreground mt-1">第 {data.day} 天</div>
       <Handle type="source" position={Position.Right} className="!bg-primary" />
@@ -84,6 +92,8 @@ interface PathGraphProps {
   edges: { id: string; source: string; target: string }[];
   nodeProgress: Map<string, NodeStatus>;
   onNodeClick?: (nodeId: string) => void;
+  /** 可选：提供节点完整标题的映射 */
+  nodeTitles?: Map<string, string>;
 }
 
 export function PathGraph({
@@ -91,6 +101,7 @@ export function PathGraph({
   edges: graphEdges,
   nodeProgress,
   onNodeClick,
+  nodeTitles,
 }: PathGraphProps) {
   const initialNodes: Node<CustomNodeData>[] = useMemo(
     () =>
@@ -100,13 +111,14 @@ export function PathGraph({
         position: node.position || { x: 0, y: 0 },
         data: {
           label: node.label,
+          title: nodeTitles?.get(node.id) || node.label,
           type: node.type,
           status: nodeProgress.get(node.id) || "pending",
           day: node.day,
           onClick: () => onNodeClick?.(node.id),
         },
       })),
-    [graphNodes, nodeProgress, onNodeClick]
+    [graphNodes, nodeProgress, onNodeClick, nodeTitles]
   );
 
   const initialEdges: Edge[] = useMemo(
