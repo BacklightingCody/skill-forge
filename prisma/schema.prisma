@@ -1,0 +1,121 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 用户
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  name          String?
+  image         String?
+
+  // 学习数据
+  plans         Plan[]
+  achievements  Achievement[]
+  manualSkills  ManualSkill[]
+
+  // 统计
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastActiveAt  DateTime?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// 学习计划
+model Plan {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 基础信息
+  domain          String    @default("programming")
+  goal            String
+  description     String?
+
+  // 时间设置
+  totalDays       Int
+  dailyMinutes    Int
+  startDate       DateTime  @default(now())
+
+  // 水平评估
+  experienceLevel String    @default("beginner")
+  currentLevel    String    @default("none")
+
+  // AI 生成的规划（JSON）
+  milestones      Json
+  graphData       Json
+
+  // 关联
+  nodeProgress    NodeProgress[]
+
+  // 状态
+  status          String    @default("active")
+  completedAt     DateTime?
+  isPublic        Boolean   @default(false)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// 节点进度
+model NodeProgress {
+  id            String    @id @default(cuid())
+  planId        String
+  plan          Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  nodeId        String
+  status        String    @default("pending")
+
+  // 打卡记录
+  checklistDone Json?
+  notes         String?
+
+  startedAt     DateTime?
+  completedAt   DateTime?
+
+  @@unique([planId, nodeId])
+  @@index([planId])
+  @@index([status])
+}
+
+// 成就
+model Achievement {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type        String
+  planId      String?
+  metadata    Json?
+
+  unlockedAt  DateTime  @default(now())
+
+  @@unique([userId, type, planId])
+  @@index([userId])
+}
+
+// 手动添加的技能
+model ManualSkill {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  category    String?
+  level       Int       @default(1)
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+}
